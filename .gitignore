@@ -2,5 +2,6 @@ INFO.md
 
 fastapi/venv
 fastapi/.idea
+fastapi/__pycache__
 
 

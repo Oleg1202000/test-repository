@@ -1,6 +1,7 @@
 from enum import Enum
+from typing import List
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 
 from schemas import Item
 
@@ -39,3 +40,11 @@ async def create_item(item_id: int, item: Item, q: bool = False):
     if q:
         result['price'] = item.price * 0.9
     return result
+
+
+@app.get('/items/')
+async def read_items(q: list[str] = Query(title='data', description='data_desc')):
+    results = {"q": q}
+    if q:
+        results.update({"q": q})
+    return results

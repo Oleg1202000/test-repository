@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import List
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Path, Body
 
-from schemas import Item
+from schemas import Item, User
 
 
 items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
@@ -34,17 +34,18 @@ async def get_model(model_name: ModelName):
     return {"model_name": model_name, "message": "Have some residuals"}
 
 
-@app.put('/items/{item_id}')
-async def create_item(item_id: int, item: Item, q: bool = False):
-    result = {'item_id': item_id, **item.dict()}
-    if q:
-        result['price'] = item.price * 0.9
-    return result
-
-
-@app.get('/items/')
-async def read_items(q: str = Query(alias='item-query')):
-    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+@app.get('/items/{item_id}')
+async def read_items(
+        item_id: int = Path(title='The ID of the item to get', gt=0, le=1000),
+        q: str = Query(alias='item-query', deprecated=True)
+):
+    results = {"item_id": item_id}
     if q:
         results.update({"q": q})
+    return results
+
+
+@app.put('/items/{item_id}')
+async def update_item(item_id: int, item: Item, user: User, importance: int = Body()):
+    results = {"item_id": item_id, "item": item, "user": user, "importance": importance}
     return results

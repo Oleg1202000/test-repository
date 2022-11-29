@@ -20,23 +20,9 @@ async def root():
 
 
 @app.get('/items/{item_id}')
-async def read_item(item_id: str, q: str | None = None, short: bool = False):
-    item = [item_id]
-    if q:
-        item.append(q)
-    if not short:
-        item.append({"description": "This is an amazing item that has a long description"})
+async def read_item(item_id: str, needy: str):
+    item = {"item_id": item_id, "needy": needy}
     return item
-
-
-@app.get('/users/me')
-async def read_user_me():
-    return {"user_id": "the current user"}
-
-
-@app.get('/users/{user_id}')
-async def read_user_me(user_id: str):
-    return {"user_id": user_id}
 
 
 @app.get('/models/{model_name}')

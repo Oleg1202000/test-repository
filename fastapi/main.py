@@ -22,12 +22,6 @@ async def root():
     return {'message': 'Hello World!'}
 
 
-@app.get('/items/{item_id}')
-async def read_item(item_id: str, needy: str):
-    item = {"item_id": item_id, "needy": needy}
-    return item
-
-
 @app.get('/models/{model_name}')
 async def get_model(model_name: ModelName):
     if model_name is ModelName.alexnet:
@@ -39,6 +33,9 @@ async def get_model(model_name: ModelName):
     return {"model_name": model_name, "message": "Have some residuals"}
 
 
-@app.post('/items/')
-async def create_item(item: Item):
-    return item
+@app.put('/items/{item_id}')
+async def create_item(item_id: int, item: Item, q: bool = False):
+    result = {'item_id': item_id, **item.dict()}
+    if q:
+        result['price'] = item.price * 0.9
+    return result

@@ -43,8 +43,8 @@ async def create_item(item_id: int, item: Item, q: bool = False):
 
 
 @app.get('/items/')
-async def read_items(q: list[str] = Query(title='data', description='data_desc')):
-    results = {"q": q}
+async def read_items(q: str = Query(alias='item-query')):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         results.update({"q": q})
     return results

@@ -8,3 +8,8 @@ class Item(BaseModel):
     price: float
     tax: float | None = None
     date: date
+
+
+class User(BaseModel):
+    username: str
+    full_name: str | None = None

@@ -2,6 +2,8 @@ from enum import Enum
 
 from fastapi import FastAPI
 
+items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+
 
 class ModelName(str, Enum):
     alexnet = "alexnet"
@@ -18,8 +20,13 @@ async def root():
 
 
 @app.get('/items/{item_id}')
-async def read_item(item_id: float):
-    return {'item_id': item_id}
+async def read_item(item_id: str, q: str | None = None, short: bool = False):
+    item = [item_id]
+    if q:
+        item.append(q)
+    if not short:
+        item.append({"description": "This is an amazing item that has a long description"})
+    return item
 
 
 @app.get('/users/me')

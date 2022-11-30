@@ -9,13 +9,24 @@ class Image(BaseModel):
 
 class Item(BaseModel):
     name: str
-    description: str | None = Field(default=None, max_length=20)
+    description: str | None = None #Field(default=None, max_length=200)
     price: float
     tax: float | None = None
     date: date
     tag: set[str] = set()
     image: Image | None = None
 
+'''
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Foo",
+                "description": "A very nice Item",
+                "price": 35.4,
+                "tax": 3.2,
+            }
+        }
+'''
 
 class User(BaseModel):
     username: str

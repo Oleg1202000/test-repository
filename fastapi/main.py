@@ -33,19 +33,47 @@ async def get_model(model_name: ModelName):
 
     return {"model_name": model_name, "message": "Have some residuals"}
 
-
+'''
 @app.get('/items/{item_id}')
 async def read_items(
         item_id: int = Path(title='The ID of the item to get', gt=0, le=1000),
-        q: str = Query(alias='item-query', deprecated=True)
+        q: str = Query(default=None, alias='item-query', deprecated=True)
 ):
     results = {"item_id": item_id}
     if q:
         results.update({"q": q})
     return results
-
+'''
 
 @app.put('/items/{item_id}')
-async def update_item(item: Item, item_id: int, user: User = Body()):
-    results = {"item_id": item_id, "item": item, "user": user}
+async def update_item(*, item: Item = Body(
+            examples={
+            "normal": {
+                "summary": "A normal example",
+                "description": "A **normal** item works correctly.",
+                "value": {
+                    "name": "Foo",
+                    "description": "A very nice Item",
+                    "price": 35.4,
+                    "tax": 3.2,
+                },
+            },
+            "converted": {
+                "summary": "An example with converted data",
+                "description": "FastAPI can convert price `strings` to actual `numbers` automatically",
+                "value": {
+                    "name": "Bar",
+                    "price": "35.4",
+                },
+            },
+            "invalid": {
+                "summary": "Invalid data is rejected with an error",
+                "value": {
+                    "name": "Baz",
+                    "price": "thirty five point four",
+                },
+            },
+        },
+), item_id: int):
+    results = {"item_id": item_id, "item": item}
     return results

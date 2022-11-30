@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List
 
-from fastapi import FastAPI, Query, Path, Body, Cookie, Header
+from fastapi import FastAPI, Query, Path, Body, Cookie, Header, Form, File, UploadFile
 
 from schemas import Item, User
 
@@ -45,7 +45,7 @@ async def read_items(
     return results
 '''
 
-@app.put('/items/{item_id}')
+@app.put('/items/{item_id}', tags=["items"])
 async def update_item(*, item: Item = Body(
             examples={
             "normal": {
@@ -82,3 +82,8 @@ async def update_item(*, item: Item = Body(
 @app.post('/items/', response_model=Item, response_model_exclude_unset=True, response_model_exclude_defaults=True)
 async def create_item(item: Item):
     return item
+
+
+@app.post('/login/')
+async def login(username: str = Form(), password: str = Form()):
+    return {'username': username}
